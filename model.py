@@ -58,7 +58,7 @@ train_generator = generator(train_samples, batch_size=1000)
 validation_generator = generator(validation_samples, batch_size=1000)
 """
 	
-for batch_sample in samples[1:]:
+for batch_sample in samples:
     for i in range(3):
         name = 'data/IMG/'+batch_sample[i].split('/')[-1]
         image = cv2.imread(name)
@@ -85,7 +85,7 @@ from keras.layers.convolutional import Convolution2D
 from keras.layers.pooling import MaxPooling2D
 
 model = Sequential()
-model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160, 320, 3)))
+model.add(Lambda(lambda x: x/255 - 0.5, input_shape=(160, 320, 3)))
 model.add(Cropping2D(cropping=((70,25), (0,0))))
 model.add(Convolution2D(24, 5, 5, subsample=(2,2), activation='relu'))
 model.add(Convolution2D(36, 5, 5, subsample=(2,2), activation='relu'))
@@ -99,7 +99,7 @@ model.add(Dense(50, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(10, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(1, activation='relu'))
+model.add(Dense(1))
 
 model.compile(loss= 'mse', optimizer= 'adam')
 model.fit(X_train, y_train, nb_epoch=3, validation_split=0.2, shuffle=True)
